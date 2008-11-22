@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + '/../lib/'
+require 'test_server'
+
+begin
+  TestServer::Client.run
+rescue Exception => e
+  puts e.message
+  puts e.backtrace.join("\n")
+end
