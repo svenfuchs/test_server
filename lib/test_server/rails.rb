@@ -19,6 +19,7 @@ module TestServer
       ActionController::Routing::Routes.reload
       ActionController::Base.view_paths.reload!
       ActionView::Helpers::AssetTagHelper::AssetTag::Cache.clear
+      require_dependency('application.rb') unless Object.const_defined?(:ApplicationController)
     end
   
     def cleanup_application

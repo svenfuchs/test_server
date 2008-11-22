@@ -1,3 +1,5 @@
+$:.unshift File.dirname(__FILE__) + '/../lib/'
+
 module TestServer
   class Server
     def initialize(argv = [], options = {})
@@ -9,7 +11,8 @@ module TestServer
       $stdout = stdout
 
       rails.reload_application
-      runner = options[:runner] || Runner::TestUnit
+      runner = options[:runner] || 'Runner::TestUnit'
+      runner = runner.constantize if runner.respond_to?(:constantize)
       runner.run argv, stderr, stdout
       rails.cleanup_application
     end

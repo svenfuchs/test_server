@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+$:.unshift 'vendor/adva/plugins/rspec/lib' # For rspec installed as plugin
+
+$:.unshift File.dirname(__FILE__) + '/../lib/'
+require 'test_server'
+
+begin
+  TestServer::Client.run :runner => 'TestServer::Runner::Specs'
+rescue Exception => e
+  puts e.message
+  puts e.backtrace.join("\n")
+end
