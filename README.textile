@@ -5,7 +5,7 @@ Just playing ...
 You might be able to install this as a plugin and then:
 
 # start the server: <code>vendor/plugins/test_server/bin/server</code>
-# run some tests: <code>vendor/plugins/test_server/bin/test [pattern]</code>
+# run some tests: <code>vendor/plugins/test_server/bin/test --pattern=[pattern]</code>
 
 The default pattern used is test/**/*_test.rb
 
