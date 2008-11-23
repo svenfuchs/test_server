@@ -1,4 +1,4 @@
-$:.unshift 'vendor/adva/plugins/rspec/lib' # For rspec installed as plugin
+$:.unshift File.expand_path('vendor/plugins/rspec/lib') # For rspec installed as plugin
 require 'spec'
 
 module TestServer
@@ -11,7 +11,6 @@ module TestServer
 
           argv << "--color"
           opts = ::Spec::Runner::OptionParser.parse(argv, $stderr, $stdout)
-          
           ::Spec::Runner::CommandLine.run opts
         end
       end

@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
-$:.unshift 'vendor/adva/plugins/rspec/lib' # For rspec installed as plugin
-
-$:.unshift File.dirname(__FILE__) + '/../lib/'
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib/')
 require 'test_server'
+require 'test_server/client'
 
 begin
   TestServer::Client.run :runner => 'TestServer::Runner::Specs'

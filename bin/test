@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
-
-$:.unshift File.dirname(__FILE__) + '/../lib/'
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib/')
 require 'test_server'
+require 'test_server/client'
 
 begin
-  TestServer::Client.run
+  TestServer::Client.run :runner => 'TestServer::Runner::Specs'
 rescue Exception => e
   puts e.message
   puts e.backtrace.join("\n")

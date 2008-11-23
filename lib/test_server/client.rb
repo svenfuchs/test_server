@@ -1,5 +1,3 @@
-require 'test_server/runner/test_unit'
-
 module TestServer
   class Client
     class << self

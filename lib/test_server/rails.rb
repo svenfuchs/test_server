@@ -19,7 +19,14 @@ module TestServer
       ActionController::Routing::Routes.reload
       ActionController::Base.view_paths.reload!
       ActionView::Helpers::AssetTagHelper::AssetTag::Cache.clear
-      require_dependency('application.rb') unless Object.const_defined?(:ApplicationController)
+
+      Dir["#{RAILS_ROOT}/config/initializers/**/*.rb"].sort.each do |initializer|
+        load(initializer)
+      end
+
+      require 'dispatcher' unless defined?(::Dispatcher)
+      Dispatcher.define_dispatcher_callbacks(true)
+      Dispatcher.new(::Rails.logger).send :run_callbacks, :prepare_dispatch
     end
   
     def cleanup_application

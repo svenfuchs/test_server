@@ -1,3 +1,4 @@
+require 'test/unit'
 require 'test_server/runner/redgreen'
 Test::Unit.run = true
 

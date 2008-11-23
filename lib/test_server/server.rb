@@ -1,7 +1,20 @@
-$:.unshift File.dirname(__FILE__) + '/../lib/'
+require 'test_server/rails'
 
 module TestServer
   class Server
+    @@callbacks = {}
+    
+    class << self
+      # too bad i can't use active_support/callbacks
+      [:before_run, :after_run].each do |name| class_eval <<-code
+          def #{name}(&block)
+            @@callbacks[#{name.inspect}] ||= []
+            @@callbacks[#{name.inspect}] << block
+          end
+        code
+      end
+    end
+    
     def initialize(argv = [], options = {})
       @options = parse_opts(argv)
     end
@@ -11,9 +24,15 @@ module TestServer
       $stdout = stdout
 
       rails.reload_application
+      run_callbacks(:before_run)
       runner = options[:runner] || 'Runner::TestUnit'
-      runner = runner.constantize if runner.respond_to?(:constantize)
+      if runner.respond_to?(:constantize)
+        require runner.underscore # why doesn't dependencies do this for us?
+        runner = runner.constantize
+      end
       runner.run argv, stderr, stdout
+      
+      run_callbacks(:after_run)
       rails.cleanup_application
     end
     
@@ -78,6 +97,12 @@ module TestServer
           }
           yield
         }
+      end
+      
+      def run_callbacks(name)
+        (@@callbacks[name] || []).each do |block|
+          instance_eval &block
         end
+      end
   end
 end
