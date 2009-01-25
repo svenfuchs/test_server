@@ -15,6 +15,8 @@ module TestServer
       end
     end
     
+    attr_reader :argv
+    
     def initialize(argv = [], options = {})
       @options = parse_opts(argv)
     end
@@ -22,9 +24,11 @@ module TestServer
     def run(argv, stderr, stdout, options = {})
       $stderr = stderr
       $stdout = stdout
+      @argv = argv
 
       rails.reload_application
       run_callbacks(:before_run)
+
       runner = options[:runner] || 'Runner::TestUnit'
       if runner.respond_to?(:constantize)
         require runner.underscore # why doesn't dependencies do this for us?

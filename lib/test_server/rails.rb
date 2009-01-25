@@ -33,25 +33,27 @@ module TestServer
       ActiveRecord::Base.reset_subclasses if defined?(ActiveRecord)
       ActiveSupport::Dependencies.clear
       ActiveRecord::Base.clear_reloadable_connections! if defined?(ActiveRecord)
+      reset_database!
+      reset_fixtures!
     end
 
-    # def reset_database!
-    #   if in_memory_database?
-    #     load "#{RAILS_ROOT}/db/schema.rb" # use db agnostic schema by default
-    #     ActiveRecord::Migrator.up('db/migrate') # use migrations
-    #   end
-    # end
-    #   
-    # def reset_fixtures!
-    #   if Object.const_defined?(:Fixtures) && Fixtures.respond_to?(:reset_cache)
-    #     Fixtures.reset_cache
-    #   end
-    # end
-    #   
-    # def in_memory_database?
-    #   ENV["RAILS_ENV"] == "test" and
-    #   ::ActiveRecord::Base.connection.class.to_s == "ActiveRecord::ConnectionAdapters::SQLite3Adapter" and
-    #   ::Rails::Configuration.new.database_configuration['test']['database'] == ':memory:'
-    # end
+    def reset_database!
+      if in_memory_database?
+        load "#{RAILS_ROOT}/db/schema.rb" # use db agnostic schema by default
+        ActiveRecord::Migrator.up('db/migrate') # use migrations
+      end
+    end
+      
+    def reset_fixtures!
+      if Object.const_defined?(:Fixtures) && Fixtures.respond_to?(:reset_cache)
+        Fixtures.reset_cache
+      end
+    end
+      
+    def in_memory_database?
+      ENV["RAILS_ENV"] == "test" and
+      ::ActiveRecord::Base.connection.class.to_s == "ActiveRecord::ConnectionAdapters::SQLite3Adapter" and
+      ::Rails::Configuration.new.database_configuration['test']['database'] == ':memory:'
+    end
   end
 end

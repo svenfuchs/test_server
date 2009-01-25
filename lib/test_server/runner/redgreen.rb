@@ -8,7 +8,7 @@ require 'test/unit/ui/console/testrunner'
 module Color
   COLORS = { :clear => 0, :red => 31, :green => 32, :yellow => 33 }
   def self.method_missing(color_name, *args)
-    color(color_name) + args.first + color(:clear) 
+    color(color_name) + args.first + color(:clear)
   end
   def self.color(color)
     "\e[#{COLORS[color.to_sym]}m"
@@ -19,7 +19,7 @@ class Test::Unit::UI::Console::RedGreenTestRunner < Test::Unit::UI::Console::Tes
   def initialize(suite, output_level=NORMAL, io=$stdout)
     super
   end
-  
+
   def output_single(something, level=NORMAL)
     return unless (output?(level))
     something = case something
@@ -28,8 +28,13 @@ class Test::Unit::UI::Console::RedGreenTestRunner < Test::Unit::UI::Console::Tes
                 when 'E' then Color.yellow("E")
                 else something
                 end
-    @io.write(something) 
+    @io.write(something)
     @io.flush
+  end
+  
+  def finished(*args)
+    @result = @result.to_s
+    super
   end
 end
 
@@ -37,7 +42,7 @@ class Test::Unit::AutoRunner
   alias :old_initialize :initialize
   def initialize(standalone)
     old_initialize(standalone)
-    @runner = proc do |r| 
+    @runner = proc do |r|
       Test::Unit::UI::Console::RedGreenTestRunner
     end
   end
